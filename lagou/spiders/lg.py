@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from ..items import LagouItem
+import json
+import logging
 
 class LgSpider(scrapy.Spider):
     name = "lg"
@@ -22,20 +24,26 @@ class LgSpider(scrapy.Spider):
 
     def parse(self, response):
         item = LagouItem()
-        item['name']=response.text
-        yield item
-        self.page+=1
+        try:
+            res=json.loads(response.text)
+            if res['result']:
+                item['gongsi']=res
+                yield item
+                self.page += 1
+                self.page = int(self.data['pn']) + 1
+                self.data['pn'] = str(self.page)
+                yield self._requests(data=self.data)
 
-        self.page =int(self.data['pn'])+1
-        self.data['pn']=str(self.page)
-        yield self._requests(data=self.data)
+        except ValueError:
+            self.log('response result json format error : %s'%response.text,level=logging.warn)
+
+
 
     def _requests(self,data,**kwargs):
-        return scrapy.FormRequest(self.base_url,formdata=data,callback=self.parse)
+        return scrapy.FormRequest(self.base_url,formdata=data,callback=self.parse,dont_filter=True)
 
     @staticmethod
     def close(spider, reason):
-        print spider.data,'####'
         closed = getattr(spider, 'closed', None)
         if callable(closed):
             return closed(reason)
