@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
+from base import BaseSpider
 import scrapy
-from ..items import LagouItem
+from ..items import GongSiItem
 import json
 import logging
 
-class LgSpider(scrapy.Spider):
-    name = "lg"
-    allowed_domains = ["lg"]
+
+class GongSiSpider(BaseSpider):
+    """
+    专门抓取 公司介绍信息的爬虫 通过  http://www.lagou.com/gongsi/0-0-0.json post 获得
+    """
+    name = "gongsi"
+    # allowed_domains = []
     base_url = 'http://www.lagou.com/gongsi/0-0-0.json'   # 方法 post
     start_urls = (
         base_url,
@@ -23,11 +28,12 @@ class LgSpider(scrapy.Spider):
         yield self._requests(data=self.data,)
 
     def parse(self, response):
-        item = LagouItem()
+        item = GongSiItem()
         try:
             res=json.loads(response.text)
             if res['result']:
                 item['gongsi']=res
+                item['conn']=BaseSpider.conn
                 yield item
                 self.page += 1
                 self.page = int(self.data['pn']) + 1
@@ -41,10 +47,4 @@ class LgSpider(scrapy.Spider):
 
     def _requests(self,data,**kwargs):
         return scrapy.FormRequest(self.base_url,formdata=data,callback=self.parse,dont_filter=True)
-
-    @staticmethod
-    def close(spider, reason):
-        closed = getattr(spider, 'closed', None)
-        if callable(closed):
-            return closed(reason)
 

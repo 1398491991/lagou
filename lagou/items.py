@@ -6,9 +6,11 @@
 # http://doc.scrapy.org/en/latest/topics/items.html
 
 import scrapy
+class BaseItem(scrapy.Item):
+    # define the fields for your item here like:
+    conn = scrapy.Field()
 
-
-class LagouItem(scrapy.Item):
+class GongSiItem(BaseItem):
     # define the fields for your item here like:
     gongsi = scrapy.Field()
-    # pass
+

@@ -9,6 +9,29 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
+
+# my settings
+DB_CONFIG={
+    'host':'localhost',
+    'user':'root',
+    'passwd':'123456789',
+    'db':'lshu',
+    'port':3306,
+    'charset':'utf8'
+}
+
+
+# my settings end
+
+
+
+
+
+
+
+
+
+
 BOT_NAME = 'lagou'
 
 SPIDER_MODULES = ['lagou.spiders']
@@ -64,9 +87,9 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'lagou.pipelines.SomePipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'lagou.pipelines.gongsi.GongSiPipelines': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
