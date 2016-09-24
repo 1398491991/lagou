@@ -38,7 +38,7 @@ class GongSiPipelines(BasePipeline):
             result_list=item['gongsi']['result']
             for result in result_list:
                 companyId = result['companyId']
-                cur.execute(self.sql,(companyId,json.dumps(item['gongsi'])))
+                cur.execute(self.sql,(companyId,json.dumps(result)))
                 conn.commit()
 
         except KeyError:
