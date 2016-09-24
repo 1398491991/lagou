@@ -15,7 +15,7 @@ DB_CONFIG={
     'host':'localhost',
     'user':'root',
     'passwd':'123456789',
-    'db':'lshu',
+    'db':'lagou',
     'port':3306,
     'charset':'utf8'
 }

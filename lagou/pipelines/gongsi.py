@@ -1,11 +1,13 @@
 #coding=utf-8
 from base import BasePipeline
+import json
 
 class GongSiPipelines(BasePipeline):
+    sql = """insert into gongsi(company_id,detail) values(%s,%s) """
     def process_item(self, item, spider):
         if spider.name!="gongsi":
             return item
-        """
+        """item 格式 字典
             {
         "pageSize": 16,
         "start": "16",
@@ -26,8 +28,24 @@ class GongSiPipelines(BasePipeline):
                 "countryScore": 0,
                 "cityScore": 0
             },
-            item 格式
+
         """
+        cur=None
+        conn=None
+        try:
+            conn = item['conn']
+            cur=conn.cursor()
+            result_list=item['gongsi']['result']
+            for result in result_list:
+                companyId = result['companyId']
+                cur.execute(self.sql,(companyId,json.dumps(item['gongsi'])))
+                conn.commit()
 
-
-        return item
+        except KeyError:
+            pass
+        except Exception as e:
+            print '\n\n\n################################\n\n\n',e
+            if conn:conn.rollback()
+        finally:
+            if cur:cur.close()
+            return item
