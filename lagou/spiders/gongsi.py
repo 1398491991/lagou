@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from base import BaseSpider
-import scrapy
 from ..items import GongSiItem
 import json
 import logging
@@ -43,8 +42,4 @@ class GongSiSpider(BaseSpider):
         except ValueError:
             self.log('response result json format error : %s'%response.text,level=logging.warn)
 
-
-
-    def _requests(self,data,**kwargs):
-        return scrapy.FormRequest(self.base_url,formdata=data,callback=self.parse,dont_filter=True)
 
